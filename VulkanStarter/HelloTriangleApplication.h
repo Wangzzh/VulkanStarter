@@ -3,6 +3,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <cstdlib>
+#include <vector>
 
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
@@ -15,6 +16,7 @@ public:
 
 private:
 	void initVulkan();
+	void createInstance();
 	void initWindow();
 	void mainLoop();
 	void cleanUp();
@@ -23,5 +25,7 @@ private:
 	const uint32_t HEIGHT = 600;
 
 	GLFWwindow* window;
+
+	VkInstance instance;
 };
 
