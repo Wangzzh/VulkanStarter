@@ -20,12 +20,22 @@ private:
 	void initWindow();
 	void mainLoop();
 	void cleanUp();
+	bool checkValidationLayerSupport();
+
+	GLFWwindow* window;
+	VkInstance instance;
 
 	const uint32_t WIDTH = 800;
 	const uint32_t HEIGHT = 600;
 
-	GLFWwindow* window;
+	const std::vector<const char*> validationLayers = {
+		"VK_LAYER_KHRONOS_validation"
+	};
 
-	VkInstance instance;
+#ifdef NDEBUG
+	const bool enableValidationLayers = false;
+#else
+	const bool enableValidationLayers = true;
+#endif
 };
 
