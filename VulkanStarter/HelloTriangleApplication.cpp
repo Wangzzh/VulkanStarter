@@ -19,6 +19,7 @@ void HelloTriangleApplication::initWindow()
 void HelloTriangleApplication::initVulkan()
 {
 	createInstance();
+	pickupPhysicalDevice();
 }
 
 void HelloTriangleApplication::createInstance() {
@@ -65,6 +66,47 @@ void HelloTriangleApplication::createInstance() {
 	for (const auto& extension : extensions) {
 		std::cout << "\t" << extension.extensionName << "\n";
 	}
+}
+
+void HelloTriangleApplication::pickupPhysicalDevice()
+{
+	VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
+
+	uint32_t deviceCount = 0;
+	vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
+	if (deviceCount == 0) {
+		throw std::runtime_error("No GPUs found with Vulkan support");
+	}
+
+	std::vector<VkPhysicalDevice> devices(deviceCount);
+	vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());
+
+	for (const auto& device : devices) {
+		if (isDeviceSuitable(device)) {
+			physicalDevice = device;
+			break;
+		}
+	}
+
+	if (physicalDevice == VK_NULL_HANDLE) {
+		throw std::runtime_error("No suitable devices");
+	}
+}
+
+bool HelloTriangleApplication::isDeviceSuitable(VkPhysicalDevice device)
+{
+	VkPhysicalDeviceProperties deviceProperties;
+	vkGetPhysicalDeviceProperties(device, &deviceProperties);
+	VkPhysicalDeviceFeatures deviceFeatures;
+	vkGetPhysicalDeviceFeatures(device, &deviceFeatures);
+
+	std::cout << "Checking device suitability" << std::endl;
+	std::cout << "\tDevice name: " << deviceProperties.deviceName << std::endl;
+	std::cout << "\tDevice version: " << deviceProperties.driverVersion << std::endl;
+
+	return deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU
+		&& deviceFeatures.geometryShader;
+
 }
 
 void HelloTriangleApplication::mainLoop()

@@ -17,9 +17,13 @@ public:
 private:
 	void initVulkan();
 	void createInstance();
+	void pickupPhysicalDevice();
+	bool isDeviceSuitable(VkPhysicalDevice device);
+
 	void initWindow();
 	void mainLoop();
 	void cleanUp();
+
 	bool checkValidationLayerSupport();
 
 	GLFWwindow* window;
