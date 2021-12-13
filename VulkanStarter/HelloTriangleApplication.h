@@ -4,13 +4,16 @@
 #include <stdexcept>
 #include <cstdlib>
 #include <vector>
+#include <set>
 #include <optional>
 
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
 struct QueueFamilyIndices {
-	std::optional<uint32_t> graphisFamily;
+public:
+	std::optional<uint32_t> graphicsFamily;
+	std::optional<uint32_t> presentFamily;
 	bool isComplete();
 };
 
@@ -22,10 +25,11 @@ public:
 private:
 	void initVulkan();
 	void createInstance();
+	void createSurface();
 	void pickupPhysicalDevice();
-	bool isDeviceSuitable(VkPhysicalDevice device);
+	bool isDeviceSuitable(VkPhysicalDevice physicalDevice);
 
-	QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
+	QueueFamilyIndices findQueueFamilies(VkPhysicalDevice physicalDevice);
 	void createLogicalDevice();
 
 	void initWindow();
@@ -39,6 +43,9 @@ private:
 	VkPhysicalDevice physicalDevice;
 	VkDevice device;
 	VkQueue graphicsQueue;
+	VkQueue presentQueue;
+
+	VkSurfaceKHR surface;
 
 	const uint32_t WIDTH = 800;
 	const uint32_t HEIGHT = 600;
