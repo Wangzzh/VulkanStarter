@@ -26,6 +26,7 @@ private:
 	bool isDeviceSuitable(VkPhysicalDevice device);
 
 	QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
+	void createLogicalDevice();
 
 	void initWindow();
 	void mainLoop();
@@ -35,6 +36,9 @@ private:
 
 	GLFWwindow* window;
 	VkInstance instance;
+	VkPhysicalDevice physicalDevice;
+	VkDevice device;
+	VkQueue graphicsQueue;
 
 	const uint32_t WIDTH = 800;
 	const uint32_t HEIGHT = 600;
