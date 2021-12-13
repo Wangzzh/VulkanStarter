@@ -4,10 +4,15 @@
 #include <stdexcept>
 #include <cstdlib>
 #include <vector>
+#include <optional>
 
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
+struct QueueFamilyIndices {
+	std::optional<uint32_t> graphisFamily;
+	bool isComplete();
+};
 
 class HelloTriangleApplication
 {
@@ -19,6 +24,8 @@ private:
 	void createInstance();
 	void pickupPhysicalDevice();
 	bool isDeviceSuitable(VkPhysicalDevice device);
+
+	QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
 
 	void initWindow();
 	void mainLoop();

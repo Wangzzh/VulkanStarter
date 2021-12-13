@@ -104,10 +104,35 @@ bool HelloTriangleApplication::isDeviceSuitable(VkPhysicalDevice device)
 	std::cout << "\tDevice name: " << deviceProperties.deviceName << std::endl;
 	std::cout << "\tDevice version: " << deviceProperties.driverVersion << std::endl;
 
-	return deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU
-		&& deviceFeatures.geometryShader;
+	QueueFamilyIndices indices = findQueueFamilies(device);
+	return indices.isComplete();
 
 }
+
+QueueFamilyIndices HelloTriangleApplication::findQueueFamilies(VkPhysicalDevice device)
+{
+	QueueFamilyIndices indices;
+
+	uint32_t queueFamilyCount = 0;
+	vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
+	std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+	vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
+
+	int i = 0;
+	for (const auto& queueFamily : queueFamilies) {
+		if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
+			indices.graphisFamily = i;
+		}
+		if (indices.isComplete()) {
+			break;
+		}
+		i++;
+	}
+
+	return indices;
+}
+
+
 
 void HelloTriangleApplication::mainLoop()
 {
@@ -144,4 +169,9 @@ bool HelloTriangleApplication::checkValidationLayerSupport()
 		}
 	}
 	return true;
+}
+
+bool QueueFamilyIndices::isComplete()
+{
+	return graphisFamily.has_value();
 }
